@@ -70,7 +70,7 @@ public class FCFS {
 		}
 	}
 
-	public Map.Entry<String, int[]>  removeProcess(Queue<Map.Entry<String, int[]>> processQueue) {
+	public Map.Entry<String, int[]> removeProcess(Queue<Map.Entry<String, int[]>> processQueue) {
 		if (processQueue.isEmpty()) {
 			System.out.println("The process queue is already empty");
 			return null;
