@@ -159,12 +159,12 @@ public class CPUScheduling extends Panels {
             case 4: // Priority (non-preemptive)
                 System.out.println("Priority non-preemptive Simulator");
                 currentSimulator = new PriorityNonPreemptive(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel, timer);
-                ((PriorityNonPreemptive) currentSimulator).startSimulation();
+                ((PriorityNonPreemptive) currentSimulator).startSimulation(simulator.getPriorityLevel());
                 break;
             case 5: // Priority (preemptive)
                 System.out.println("Priority preemptive Simulator");
                 currentSimulator = new PriorityPreemptive(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel, timer);
-                ((PriorityPreemptive) currentSimulator).startSimulation();
+                ((PriorityPreemptive) currentSimulator).startSimulation(simulator.getPriorityLevel());
                 break;
         }
     }  

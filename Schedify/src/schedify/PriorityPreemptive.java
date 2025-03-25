@@ -27,6 +27,7 @@ class PriorityPreemptive extends Panels {
     private ArrayList<Process> completedProcess;
     private int time = 0;
     private Process currentProcess = null;
+    private Process highestPriorityProcess = null;
     private JPanel outputPanel, panel, cpuPanel, readyQueuePanel;
     public Color transparent, white, gray, black;
     public Timer timer;
@@ -50,7 +51,7 @@ class PriorityPreemptive extends Panels {
         archivoblack = importFont("archivoblack");
     }
     
-    public void startSimulation() {
+    public void startSimulation(int priorityLevel) {
         System.out.println("Starting Shortest Job First non-preemptive Simulation \n");
 
         processList.sort(Comparator.comparingInt(p -> p.arrivalTime));
@@ -70,25 +71,47 @@ class PriorityPreemptive extends Panels {
                 
                 // check if the next process has higher priority
                 if (!readyQueue.isEmpty()) {
-                    Process highestPriorityProcess = Collections.min(readyQueue, Comparator.comparingInt(p -> p.priority));
-                    
-                    if (currentProcess == null || highestPriorityProcess.priority < currentProcess.priority) {
-                        if (currentProcess != null && currentProcess.remainingTime > 0) {
-                            // pre-empt the current process and put it back in the queue
-                            readyQueue.offer(currentProcess);
+                    if (priorityLevel != 0) {
+                        highestPriorityProcess = Collections.max(readyQueue, Comparator.comparingInt(p -> p.priority));
+                        
+                        if (currentProcess == null || highestPriorityProcess.priority > currentProcess.priority) {
+                            if (currentProcess != null && currentProcess.remainingTime > 0) {
+                                // pre-empt the current process and put it back in the queue
+                                readyQueue.offer(currentProcess);
+                                updateReadyQueuePanel(readyQueue);
+                            }
+                        
+                            // get new process
+                            currentProcess = highestPriorityProcess;
+                            readyQueue.remove(currentProcess);
                             updateReadyQueuePanel(readyQueue);
-                        }
                         
-                        // get new process
-                        currentProcess = highestPriorityProcess;
-                        readyQueue.remove(currentProcess);
-                        updateReadyQueuePanel(readyQueue);
-                        
-                        if (ganttChartLabels.isEmpty() || !ganttChartLabels.get(ganttChartLabels.size() - 1).equals(currentProcess.id)) {
-                            ganttChartLabels.add(currentProcess.id);
-                            ganttChartTimes.add(time);
+                            if (ganttChartLabels.isEmpty() || !ganttChartLabels.get(ganttChartLabels.size() - 1).equals(currentProcess.id)) {
+                                ganttChartLabels.add(currentProcess.id);
+                                ganttChartTimes.add(time);
+                            }
                         }
-                    }
+                    } else {
+                        highestPriorityProcess = Collections.min(readyQueue, Comparator.comparingInt(p -> p.priority));
+                        
+                        if (currentProcess == null || highestPriorityProcess.priority < currentProcess.priority) {
+                            if (currentProcess != null && currentProcess.remainingTime > 0) {
+                                // pre-empt the current process and put it back in the queue
+                                readyQueue.offer(currentProcess);
+                                updateReadyQueuePanel(readyQueue);
+                            }
+                        
+                            // get new process
+                            currentProcess = highestPriorityProcess;
+                            readyQueue.remove(currentProcess);
+                            updateReadyQueuePanel(readyQueue);
+                        
+                            if (ganttChartLabels.isEmpty() || !ganttChartLabels.get(ganttChartLabels.size() - 1).equals(currentProcess.id)) {
+                                ganttChartLabels.add(currentProcess.id);
+                                ganttChartTimes.add(time);
+                            }
+                        }
+                    }   
                 }
 
 		// process execution logic

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -25,6 +26,7 @@ public class UserInputPagePriority extends Panels implements ActionListener{
     public JButton backButton, clearButton, addButton, runButton;
     public Color gray, black, transparent, white;
     public JTextField inputField, processIDField, burstField, arrivalField, priorityField;
+    public JComboBox priorityBox;
     
     public boolean validInput;
     public String id, arrivalTime, burstTime, priority;
@@ -69,24 +71,37 @@ public class UserInputPagePriority extends Panels implements ActionListener{
         header.add(backButton);       
         
         inputPanel1 = new JPanel(new FlowLayout(FlowLayout.CENTER, 0,0));
-        inputPanel1.setPreferredSize(new Dimension(900, 230));
+        inputPanel1.setPreferredSize(new Dimension(800, 230));
         inputPanel1.setOpaque(false);
-        inputPanel1.setBorder(BorderFactory.createEmptyBorder(40,30,   10,30));
+        inputPanel1.setBorder(BorderFactory.createEmptyBorder(40,0,   10,0));
         
         inputPanel1.add(createPanel(gray, black, "PROCESS ID"));
         inputPanel1.add(createPanel(gray, black, "ARRIVAL TIME"));
         inputPanel1.add(createPanel(gray, black, "BURST TIME"));
         inputPanel1.add(createPanel(gray, black, "PRIORITY NUMBER"));
+        inputPanel1.add(createPanel(gray, black, "CHOOSE PRIORITY"));
         
         processIDField = createInputField();
         burstField = createInputField();
         arrivalField = createInputField();
         priorityField = createInputField();
         
+        String[] priorityLevel = {"Low #, High Priority", "High #, High Priority"};
+        
+        priorityBox = new JComboBox(priorityLevel);
+        priorityBox.setPreferredSize(new Dimension(160, 40));
+        priorityBox.setFocusable(true);
+        priorityBox.setFont(archivoblack.deriveFont(12f));
+        priorityBox.setBackground(Color.WHITE);
+        priorityBox.setForeground(new Color(4, 3, 93));
+        priorityBox.setBorder(null);
+        priorityBox.addActionListener(this);
+        
         inputPanel1.add(processIDField);
         inputPanel1.add(arrivalField);
         inputPanel1.add(burstField);
         inputPanel1.add(priorityField);
+        inputPanel1.add(priorityBox);
         
         clearButton = createButton("CLEAR");
         addButton = createButton("ADD");
@@ -150,7 +165,7 @@ public class UserInputPagePriority extends Panels implements ActionListener{
     public JPanel createPanel(Color background, Color foreground, String label){
         JPanel jpanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10));
         JLabel jlabel = new JLabel();
-        jpanel.setPreferredSize(new Dimension (200, 40));
+        jpanel.setPreferredSize(new Dimension (160, 40));
         jpanel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
         jpanel.setBackground(background);
         jlabel.setForeground(foreground);
@@ -164,7 +179,7 @@ public class UserInputPagePriority extends Panels implements ActionListener{
     
     public JTextField createInputField(){
         JTextField input = new JTextField();
-        input.setPreferredSize(new Dimension(200,40));
+        input.setPreferredSize(new Dimension(160,40));
         input.setBorder(BorderFactory.createLineBorder(Color.white, 1));
         input.setOpaque(false);
         input.setFont(archivoblack.deriveFont(14f));
@@ -319,5 +334,12 @@ public class UserInputPagePriority extends Panels implements ActionListener{
             errorLabel.setText("");
             runButton.setEnabled(false);
         }
+        else if (e.getSource()==priorityBox){
+            simulator.setPriorityLevel(priorityBox.getSelectedIndex());
+            // 0 = low #, high priority
+            // 1 = high #, high priority
+            System.out.println("PrioLevel: " + simulator.getPriorityLevel());
+        }
     }
+    
 }

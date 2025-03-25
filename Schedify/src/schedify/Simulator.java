@@ -6,6 +6,7 @@ public class Simulator {
     
     private final ArrayList<Process> processList = new ArrayList<>();
     private int quantumTime;
+    private int priorityLevel = 0;
     
     public void addProcess(Process p) {
         processList.add(p);
@@ -25,5 +26,13 @@ public class Simulator {
     
     public int getQuantumTime() {
         return quantumTime;
+    }
+    
+    public void setPriorityLevel(int pt){
+        priorityLevel = pt;
+    }
+    
+    public int getPriorityLevel(){
+        return priorityLevel;
     }
 }

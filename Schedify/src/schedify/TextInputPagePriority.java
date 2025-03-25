@@ -12,6 +12,7 @@ import java.util.Random;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -22,6 +23,7 @@ public class TextInputPagePriority extends Panels implements ActionListener{
     private JPanel header, processPanel, buttonPanel, panel;
     private JLabel logoLabel;
     public JButton backButton, textButton, clearButton, runButton;
+    public JComboBox priorityBox;
     public JScrollPane processScrollPane;
     public int processCount;
     public Color gray, black, transparent, white;
@@ -57,23 +59,35 @@ public class TextInputPagePriority extends Panels implements ActionListener{
         header.add(logoLabel);
         header.add(backButton);   
         
-        buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
+        buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         buttonPanel.setPreferredSize(new Dimension (800, 100));
         buttonPanel.setOpaque(false);
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(20,0,40,0));
         
         clearButton = createButton("CLEAR");
         textButton = createButton("TXT FILE");
-        textButton.setPreferredSize(new Dimension(300,40));
+        textButton.setPreferredSize(new Dimension(297,40));
         runButton = createButton("RUN"); 
         
         clearButton.addActionListener(this);
         textButton.addActionListener(this);
         runButton.addActionListener(this); 
         
+        String[] priorityLevel = {"Low #, High Priority", "High #, High Priority"};
+        
+        priorityBox = new JComboBox(priorityLevel);
+        priorityBox.setPreferredSize(new Dimension(160, 40));
+        priorityBox.setFocusable(true);
+        priorityBox.setFont(archivoblack.deriveFont(12f));
+        priorityBox.setBackground(Color.WHITE);
+        priorityBox.setForeground(new Color(4, 3, 93));
+        priorityBox.setBorder(null);
+        priorityBox.addActionListener(this);
+        
+        
         buttonPanel.add(clearButton);
         buttonPanel.add(textButton);
         buttonPanel.add(runButton);
+        buttonPanel.add(priorityBox);
         
         processPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,0,0));
         processPanel.setPreferredSize(new Dimension(800, 840));
@@ -101,7 +115,7 @@ public class TextInputPagePriority extends Panels implements ActionListener{
         JButton button = new JButton(text);
         button.setBackground(new Color(118,130,138));
         button.setForeground(Color.WHITE);
-        button.setPreferredSize(new Dimension(200, 40));
+        button.setPreferredSize(new Dimension(147, 40));
         button.setFont(archivoblack.deriveFont(Font.BOLD, 20));
         button.setFocusable(false);
         button.setBorderPainted(false);
@@ -176,6 +190,11 @@ public class TextInputPagePriority extends Panels implements ActionListener{
             repaint();
             processCount = 0;
             textButton.setEnabled(true);
+        }
+        else if (e.getSource()==priorityBox){
+            simulator.setPriorityLevel(priorityBox.getSelectedIndex());
+            // 0 = low #, high priority
+            // 1 = high #, high priority
         }
     }
 }

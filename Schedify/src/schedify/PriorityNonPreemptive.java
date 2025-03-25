@@ -50,8 +50,8 @@ class PriorityNonPreemptive extends Panels {
         archivoblack = importFont("archivoblack");
     }
     
-    public void startSimulation() {
-        System.out.println("Starting Shortest Job First non-preemptive Simulation \n");
+    public void startSimulation(int priorityLevel) {
+        System.out.println("Starting Shortest Job First non-preemptive Simulation w/ priority Level " + priorityLevel + "\n");
 
         processList.sort(Comparator.comparingInt(p -> p.arrivalTime));
         Queue<Process> readyQueue = new LinkedList<>();
@@ -72,7 +72,12 @@ class PriorityNonPreemptive extends Panels {
                 if (currentProcess == null || currentProcess.remainingTime == 0) {
                     // get a new process only if needed
                     if (!readyQueue.isEmpty()) {
-                        currentProcess = Collections.min(readyQueue, Comparator.comparingInt(p -> p.priority));
+                        if (priorityLevel != 0) {
+                            currentProcess = Collections.max(readyQueue, Comparator.comparingInt(p -> p.priority));
+                        } else {
+                            currentProcess = Collections.min(readyQueue, Comparator.comparingInt(p -> p.priority));
+                        }
+
                         readyQueue.remove(currentProcess);
                         updateReadyQueuePanel(readyQueue);
 
