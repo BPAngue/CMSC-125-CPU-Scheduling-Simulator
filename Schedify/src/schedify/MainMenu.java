@@ -16,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -215,6 +216,13 @@ public final class MainMenu extends JPanel implements ActionListener{
                 || e.getSource()==rrPanel.backButton || e.getSource()==rdPanel.backButton
                 || e.getSource()==udPanel.backButton || e.getSource()==urPanel.backButton){
             cardLayout.show(cardPanel, "START");
+            simulatorPanel.clearProcessList();
+            rdPanel.clearOutputRow();
+            rrPanel.clearOutputRow();
+            rpPanel.clearOutputRow();
+            udPanel.clearOutputRow();
+            urPanel.clearOutputRow();
+            upPanel.clearOutputRow();
         }
         else if (e.getSource() == helpButton){
             cardLayout.show(cardPanel, "HELP");
@@ -297,6 +305,18 @@ public final class MainMenu extends JPanel implements ActionListener{
             cardLayout.show(cardPanel, "SCHEDULING");
         } else if (e.getSource() == schedulingPanel.backButton) {
             cardLayout.show(cardPanel, "START");
+            simulatorPanel.clearProcessList();
+            
+            // for debugging
+            ArrayList<Process> processes = simulatorPanel.getProcesses();
+            
+            if (processes.isEmpty()) {
+                System.out.println("There are no processes!");
+            } else  {
+                for (Process process : processes) {
+                    System.out.println("Process Id: " + process.id);
+                }
+            }
         }  
     }
     

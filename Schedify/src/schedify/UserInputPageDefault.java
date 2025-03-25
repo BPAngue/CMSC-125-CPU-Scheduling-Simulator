@@ -267,6 +267,13 @@ public class UserInputPageDefault extends Panels implements ActionListener{
         
         return panel;
     }
+    
+    public void clearOutputRow() {
+        inputPanel2.removeAll();
+        addButton.setEnabled(true);
+        runButton.setEnabled(false);
+        processCount = 0;
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {

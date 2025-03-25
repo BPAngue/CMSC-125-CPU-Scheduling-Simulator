@@ -167,8 +167,11 @@ public class RandomInputPagePriority extends Panels implements ActionListener{
         return panel;
     }
     
-    //ArrayList<Process> simulator.processList = new ArrayList<>();
-    
+    public void clearOutputRow() {
+        processPanel.removeAll();
+        randomButton.setEnabled(true);
+        runButton.setEnabled(false);
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {

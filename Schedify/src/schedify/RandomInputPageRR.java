@@ -191,6 +191,28 @@ public class RandomInputPageRR extends Panels implements ActionListener{
         
         return panel;
     } 
+    
+    public void clearOutputRow() {
+        processPanel.removeAll();
+        randomButton.setEnabled(true);
+        runButton.setEnabled(false);
+        processCount = 0;
+        quantum = 0;
+        
+        randomPanel.removeAll();
+        repaint();
+        randomPanel.revalidate();
+    
+        randomPanel.add(createPanel(gray, black, white, "NO. OF PROCESS", 200));      
+        randomPanel.add(createPanel(transparent, transparent, transparent, "", 40));     
+        randomPanel.add(createPanel(gray, black, white, "QUANTUM NUMBER", 200));
+    
+        randomPanel.add(createPanel(transparent, transparent, white, "", 200));  
+        randomPanel.add(createPanel(transparent, transparent, transparent, "", 40));     
+        randomPanel.add(createPanel(transparent, transparent, white, "", 200));
+    
+        repaint();
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {

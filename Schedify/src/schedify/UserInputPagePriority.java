@@ -186,8 +186,6 @@ public class UserInputPagePriority extends Panels implements ActionListener{
         return process;
     }
     
-    
-    
     public boolean isNumber(String s) {
         for (int i = 0; i < s.length(); i++) {
             if (!Character.isDigit(s.charAt(i))) {
@@ -252,6 +250,13 @@ public class UserInputPagePriority extends Panels implements ActionListener{
             panel.add(createPanel(transparent, white, String.valueOf(localProcessList.get(processCount).priority)));
         
         return panel;
+    }
+    
+    public void clearOutputRow() {
+        inputPanel2.removeAll();
+        addButton.setEnabled(true);
+        runButton.setEnabled(false);
+        processCount = 0;
     }
 
     @Override

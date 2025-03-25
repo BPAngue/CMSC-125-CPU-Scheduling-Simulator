@@ -265,6 +265,15 @@ public class UserInputPageRR extends Panels implements ActionListener{
         
         return panel;
     }
+    
+    public void clearOutputRow() {
+        inputPanel2.removeAll();
+        addButton.setEnabled(true);
+        runButton.setEnabled(false);
+        quantumField.setText("");
+        quantumField.setEditable(true);
+        processCount = 0;
+    }
    
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -289,7 +298,6 @@ public class UserInputPageRR extends Panels implements ActionListener{
             burstField.setText("");
             quantumField.setText(String.valueOf(quantum));
             quantumField.setEditable(false);
-            
             
             if (processCount >=3 && processCount <= 20){
                 runButton.setEnabled(true);
