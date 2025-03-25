@@ -198,22 +198,32 @@ public class CPUScheduling extends Panels {
     }
     
     public void clearGanttChartPanel() {
-        ganttChartPanel.removeAll();
+        ganttChartPanel.removeAll(); // Remove all components
+        ganttChartPanel.revalidate(); // Revalidate the panel
+        ganttChartPanel.repaint(); // Repaint to reflect changes
+        ganttChartLabels.clear(); // Clear stored Gantt chart labels
+        ganttChartTimes.clear(); // Clear stored Gantt chart times
     }
     
     public void stopCurrentSimulation() {
         if(currentSimulator instanceof FCFS fcfs) {
             fcfs.stopSimulation();
+            fcfs.clearOutputPanel();
         } else if(currentSimulator instanceof RoundRobin roundRobin) {
             roundRobin.stopSimulation();
+            roundRobin.clearOutputPanel();
         } else if(currentSimulator instanceof SJFNonPreemptive sJFNonPreemptive) {
             sJFNonPreemptive.stopSimulation();
+            sJFNonPreemptive.clearOutputPanel();
         } else if(currentSimulator instanceof SJFPreemptive sJFPreemptive) {
             sJFPreemptive.stopSimulation();
+            sJFPreemptive.clearOutputPanel();
         } else if(currentSimulator instanceof PriorityNonPreemptive priorityNonPreemptive) {
             priorityNonPreemptive.stopSimulation();
+            priorityNonPreemptive.clearOutputPanel();
         } else if(currentSimulator instanceof PriorityPreemptive priorityPreemptive) {
             priorityPreemptive.stopSimulation();
+            priorityPreemptive.clearOutputPanel();
         }
     }
 }

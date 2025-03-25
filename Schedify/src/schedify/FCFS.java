@@ -285,4 +285,48 @@ class FCFS extends Panels {
             System.out.println("Simulation stopped.");
         }
     }
+    
+    public void clearOutputPanel() {
+        readyQueuePanel.removeAll();
+        readyQueuePanel.revalidate();
+        readyQueuePanel.repaint();
+        
+        JLabel queueTitle = new JLabel("Ready Queue: ");
+        queueTitle.setFont(archivoblack.deriveFont(20f));
+        queueTitle.setForeground(Color.WHITE);
+        readyQueuePanel.add(queueTitle);
+        
+        JLabel processLabel1 = new JLabel("No processes in ready queue");
+        processLabel1.setFont(archivoblack.deriveFont(20f));
+        processLabel1.setForeground(Color.YELLOW);
+        readyQueuePanel.add(processLabel1);
+        
+        cpuPanel.removeAll();
+        cpuPanel.revalidate();
+        cpuPanel.repaint();
+        
+        JLabel title = new JLabel("CPU: ");
+        title.setFont(archivoblack.deriveFont(20f));
+        title.setForeground(Color.WHITE);
+        cpuPanel.add(title);
+        
+        JLabel processLabel2 = new JLabel("Idle");
+        processLabel2.setFont(archivoblack.deriveFont(20f));
+        processLabel2.setForeground(Color.YELLOW);
+        cpuPanel.add(processLabel2);
+        
+        outputPanel.removeAll();
+        outputPanel.revalidate();
+        outputPanel.repaint();
+        
+        outputPanel.add(createPanel(gray, black, "PROCESS ID"));
+        outputPanel.add(createPanel(gray, black, "ARRIVAL TIME"));
+        outputPanel.add(createPanel(gray, black, "BURST TIME")); 
+        outputPanel.add(createPanel(gray, black, "PRIORITY")); 
+        outputPanel.add(createPanel(gray, black, "<html><body style='text-align:center;'>COMPLETION<br>TIME</body></html>")); 
+        outputPanel.add(createPanel(gray, black, "<html><body style='text-align:center;'>TURNAROUND<br>TIME (TT)</body></html>")); 
+        outputPanel.add(createPanel(gray, black, "<html><body style='text-align:center;'>WAITING<br>TIME (WT)</body></html>")); 
+        outputPanel.add(createPanel(gray, black, "AVG. TT")); 
+        outputPanel.add(createPanel(gray, black, "AVG. WT"));
+    }
 }

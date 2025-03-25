@@ -320,5 +320,4 @@ public class UserInputPagePriority extends Panels implements ActionListener{
             runButton.setEnabled(false);
         }
     }
-    
 }
