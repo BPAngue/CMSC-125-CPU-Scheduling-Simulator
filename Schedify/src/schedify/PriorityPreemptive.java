@@ -29,8 +29,9 @@ class PriorityPreemptive extends Panels {
     private Process currentProcess = null;
     private JPanel outputPanel, panel, cpuPanel, readyQueuePanel;
     public Color transparent, white, gray, black;
+    public Timer timer;
     
-    public PriorityPreemptive(ArrayList<Process> processList, GanttChartPanel ganttChartPanel, ArrayList<String> ganttChartLabels, ArrayList<Integer> ganttChartTimes, JPanel outputPanel, JPanel cpuPanel, JPanel readyQueuePanel) {
+    public PriorityPreemptive(ArrayList<Process> processList, GanttChartPanel ganttChartPanel, ArrayList<String> ganttChartLabels, ArrayList<Integer> ganttChartTimes, JPanel outputPanel, JPanel cpuPanel, JPanel readyQueuePanel, Timer timer) {
         this.processList = processList;
         this.ganttChartPanel = ganttChartPanel;
         this.ganttChartLabels = ganttChartLabels;
@@ -38,6 +39,7 @@ class PriorityPreemptive extends Panels {
         this.outputPanel = outputPanel;
         this.cpuPanel = cpuPanel;
         this.readyQueuePanel = readyQueuePanel;
+        this.timer = timer;
         
         turnAroundTimes = new ArrayList<>();
         waitingTimes = new ArrayList<>();
@@ -54,7 +56,7 @@ class PriorityPreemptive extends Panels {
         processList.sort(Comparator.comparingInt(p -> p.arrivalTime));
         Queue<Process> readyQueue = new LinkedList<>();
 
-        Timer timer = new Timer(1000, new ActionListener() {
+        timer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 		// add new processes to the ready queue when they arrive
@@ -285,5 +287,12 @@ class PriorityPreemptive extends Panels {
         
         cpuPanel.revalidate();
         cpuPanel.repaint();
+    }
+    
+    public void stopSimulation() {
+        if (timer != null && timer.isRunning()) {
+            timer.stop();
+            System.out.println("Simulation stopped.");
+        }
     }
 }

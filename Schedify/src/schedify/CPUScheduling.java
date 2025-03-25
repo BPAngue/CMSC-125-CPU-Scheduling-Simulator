@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 
 public class CPUScheduling extends Panels {
     
@@ -28,6 +29,8 @@ public class CPUScheduling extends Panels {
     public JButton backButton, randomButton, clearButton, runButton;
     public Color gray, black, transparent, white, navyBlue;
     public JLabel cpuLabel, readyQueueLabel, processLabel1, processLabel2;
+    public Timer timer;
+    private Object currentSimulator;
     
     public CPUScheduling(Simulator simulator) {
         this.simulator = simulator;
@@ -128,39 +131,40 @@ public class CPUScheduling extends Panels {
         if (processList.isEmpty()) {
             // for debugging
             System.out.println("No processes to simulate");
-            System.out.println(processList.get(0).id);
             return;
-        }
-        
-        System.out.println("Inside cpu scheduling");
-        for (Process i : processList) {
-            System.out.println("Process id: " + i.id);
-        }
+        } 
+        stopCurrentSimulation();
         
         switch(algorithm) {
             case 0: // FCFS
                 System.out.println("FCFS Simulator");
-                new FCFS(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel).startSimulation();
+                currentSimulator = new FCFS(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel, timer);
+                ((FCFS) currentSimulator).startSimulation();
                 break;
             case 1: // Round Robin
                 System.out.println("Round Robin Simulator");
-                new RoundRobin(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel).startSimulation(simulator.getQuantumTime());
+                currentSimulator = new RoundRobin(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel, timer);
+                ((RoundRobin) currentSimulator).startSimulation(simulator.getQuantumTime());
                 break;
             case 2: // SJF (non-preemptive)
                 System.out.println("SJF Simulator");
-                new SJFNonPreemptive(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel).startSimulation();
+                currentSimulator = new SJFNonPreemptive(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel, timer);
+                ((SJFNonPreemptive) currentSimulator).startSimulation();
                 break;
             case 3: // SRTF 
                 System.out.println("SRTF Simulator");
-                new SJFPreemptive(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel).startSimulation();
+                currentSimulator = new SJFPreemptive(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel, timer);
+                ((SJFPreemptive) currentSimulator).startSimulation();
                 break;
             case 4: // Priority (non-preemptive)
                 System.out.println("Priority non-preemptive Simulator");
-                new PriorityNonPreemptive(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel).startSimulation();
+                currentSimulator = new PriorityNonPreemptive(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel, timer);
+                ((PriorityNonPreemptive) currentSimulator).startSimulation();
                 break;
             case 5: // Priority (preemptive)
                 System.out.println("Priority preemptive Simulator");
-                new PriorityPreemptive(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel).startSimulation();
+                currentSimulator = new PriorityPreemptive(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel, timer);
+                ((PriorityPreemptive) currentSimulator).startSimulation();
                 break;
         }
     }  
@@ -191,5 +195,25 @@ public class CPUScheduling extends Panels {
         jpanel.add(jlabel, BorderLayout.CENTER);
         
         return jpanel;
-    }  
+    }
+    
+    public void clearGanttChartPanel() {
+        ganttChartPanel.removeAll();
+    }
+    
+    public void stopCurrentSimulation() {
+        if(currentSimulator instanceof FCFS fcfs) {
+            fcfs.stopSimulation();
+        } else if(currentSimulator instanceof RoundRobin roundRobin) {
+            roundRobin.stopSimulation();
+        } else if(currentSimulator instanceof SJFNonPreemptive sJFNonPreemptive) {
+            sJFNonPreemptive.stopSimulation();
+        } else if(currentSimulator instanceof SJFPreemptive sJFPreemptive) {
+            sJFPreemptive.stopSimulation();
+        } else if(currentSimulator instanceof PriorityNonPreemptive priorityNonPreemptive) {
+            priorityNonPreemptive.stopSimulation();
+        } else if(currentSimulator instanceof PriorityPreemptive priorityPreemptive) {
+            priorityPreemptive.stopSimulation();
+        }
+    }
 }

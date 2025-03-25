@@ -306,17 +306,14 @@ public final class MainMenu extends JPanel implements ActionListener{
         } else if (e.getSource() == schedulingPanel.backButton) {
             cardLayout.show(cardPanel, "START");
             simulatorPanel.clearProcessList();
-            
-            // for debugging
-            ArrayList<Process> processes = simulatorPanel.getProcesses();
-            
-            if (processes.isEmpty()) {
-                System.out.println("There are no processes!");
-            } else  {
-                for (Process process : processes) {
-                    System.out.println("Process Id: " + process.id);
-                }
-            }
+            rdPanel.clearOutputRow();
+            rrPanel.clearOutputRow();
+            rpPanel.clearOutputRow();
+            udPanel.clearOutputRow();
+            urPanel.clearOutputRow();
+            upPanel.clearOutputRow();
+            schedulingPanel.clearGanttChartPanel();
+            schedulingPanel.stopCurrentSimulation();
         }  
     }
     
