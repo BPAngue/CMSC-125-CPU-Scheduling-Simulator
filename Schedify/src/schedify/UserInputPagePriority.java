@@ -269,6 +269,11 @@ public class UserInputPagePriority extends Panels implements ActionListener{
     
     public void clearOutputRow() {
         inputPanel2.removeAll();
+        inputPanel2.add(createPanel(gray, black, "PROCESS ID"));
+        inputPanel2.add(createPanel(gray, black, "ARRIVAL TIME"));
+        inputPanel2.add(createPanel(gray, black, "BURST TIME"));
+        inputPanel2.add(createPanel(gray, black, "PRIORITY NUMBER"));
+        
         addButton.setEnabled(true);
         runButton.setEnabled(false);
         processCount = 0;

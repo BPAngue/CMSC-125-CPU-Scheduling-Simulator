@@ -7,28 +7,41 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.StringTokenizer;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
-public class RandomInputPageDefault extends Panels implements ActionListener{
+public class TextInputPageDefault extends Panels implements ActionListener{
     
     private JPanel header, processPanel, buttonPanel, panel;
     private JLabel logoLabel;
-    public JButton backButton, randomButton, clearButton, runButton;
+    public JButton backButton, textButton, clearButton, runButton;
+    public JComboBox priorityBox;
     public JScrollPane processScrollPane;
-    public int r, processCount;
+    public int processCount;
     public Color gray, black, transparent, white;
+    public File textFile;
+    
+    public ArrayList<String> processDetails = new ArrayList<>();
     
     private Simulator simulator;
     
-    public RandomInputPageDefault(Simulator simulator){
+    public TextInputPageDefault(Simulator simulator){
         this.simulator = simulator;
     }
     
@@ -57,24 +70,22 @@ public class RandomInputPageDefault extends Panels implements ActionListener{
         header.add(logoLabel);
         header.add(backButton);   
         
-        
         buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         buttonPanel.setPreferredSize(new Dimension (800, 100));
         buttonPanel.setOpaque(false);
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(20,0,40,0));
         
         clearButton = createButton("CLEAR");
-        randomButton = createButton("RANDOM INPUT");
-        randomButton.setPreferredSize(new Dimension(300,40));
+        textButton = createButton("TXT FILE");
+        textButton.setPreferredSize(new Dimension(300,40));
         runButton = createButton("RUN"); 
-        runButton.setEnabled(false);
         
         clearButton.addActionListener(this);
-        randomButton.addActionListener(this);
+        textButton.addActionListener(this);
         runButton.addActionListener(this); 
         
+        
         buttonPanel.add(clearButton);
-        buttonPanel.add(randomButton);
+        buttonPanel.add(textButton);
         buttonPanel.add(runButton);
         
         processPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,0,0));
@@ -83,7 +94,7 @@ public class RandomInputPageDefault extends Panels implements ActionListener{
         
         processPanel.add(createPanel(gray, black, "PROCESS ID"));
         processPanel.add(createPanel(gray, black, "ARRIVAL TIME"));
-        processPanel.add(createPanel(gray, black, "BURST TIME"));        
+        processPanel.add(createPanel(gray, black, "BURST TIME"));
         
         processScrollPane = new JScrollPane(processPanel);
         processScrollPane.setPreferredSize(new Dimension(740, 440));
@@ -94,18 +105,6 @@ public class RandomInputPageDefault extends Panels implements ActionListener{
         add(header);
         add(buttonPanel);
         add(processScrollPane);
-    }
-    
-    public int generateRandom(){
-        Random rand = new Random(); 
-        r = rand.nextInt(3, 21);
-        return r;
-    }
-    
-    public int generateRandom(int a, int b){
-        Random rand = new Random();
-        r = rand.nextInt(a, b);
-        return r;
     }
     
     @Override
@@ -121,21 +120,6 @@ public class RandomInputPageDefault extends Panels implements ActionListener{
         return button;
     }
     
-    public JPanel createPanel(Color background, Color foreground, Color border, String label, int width){
-        JPanel jpanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10));
-        JLabel jlabel = new JLabel();
-        jpanel.setPreferredSize(new Dimension (width, 40));
-        jpanel.setBorder(BorderFactory.createLineBorder(border, 1));
-        jpanel.setBackground(background);
-        jlabel.setForeground(foreground);
-        jlabel.setText(label);
-        jlabel.setVerticalAlignment(SwingConstants.CENTER);
-        jlabel.setFont(archivoblack.deriveFont(14f));
-        jpanel.add(jlabel, BorderLayout.CENTER);
-        
-        return jpanel;
-    }
-    
     public JPanel createPanel(Color background, Color foreground, String label){
         JPanel jpanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10));
         JLabel jlabel = new JLabel();
@@ -149,17 +133,6 @@ public class RandomInputPageDefault extends Panels implements ActionListener{
         jpanel.add(jlabel, BorderLayout.CENTER);
         
         return jpanel;
-    }
-    
-    public Process createProcess(int i){
-        String id = "P" + i;
-        int AT = generateRandom(0, 31);
-        int BT = generateRandom(1, 31);
-        int P = 1;
-        
-        Process process = new Process(id, AT, BT, P);
-        
-        return process;
     }
     
     public JPanel outputRow(int processCount){
@@ -180,59 +153,114 @@ public class RandomInputPageDefault extends Panels implements ActionListener{
         return panel;
     }
     
+    public File uploadFile() {
+        JFileChooser fileChooser = new JFileChooser();
+        int returnValue = fileChooser.showOpenDialog(null);
+        
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            System.out.println("File selected: " + selectedFile.getAbsolutePath());
+            return selectedFile;
+        } else {
+            System.out.println("File selection cancelled.");
+            return null;
+        }
+    }
+    
+     public void readFile(File file) {
+         
+        if (file == null) {
+            System.out.println("No file to read.");
+            return;
+        }
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                processDetails.add(line.trim());
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+        }
+        
+    }
+     
+    public void createProcess(){
+        for (String i : processDetails){
+            System.out.println(i);
+            StringTokenizer st = new StringTokenizer(i, ",");
+            if (st.hasMoreTokens()) {
+                processCount++;
+                String processID = st.nextToken().trim();
+                int arrivalTime = Integer.parseInt(st.nextToken().trim());
+                int burstTime = Integer.parseInt(st.nextToken().trim());
+                int priority = Integer.parseInt(st.nextToken().trim());
+                
+                Process process = new Process(processID, arrivalTime, burstTime, priority);
+                simulator.addProcess(process);
+            }
+            
+        }
+    }
+
     public void clearOutputRow() {
         processPanel.removeAll();
         processPanel.add(createPanel(gray, black, "PROCESS ID"));
         processPanel.add(createPanel(gray, black, "ARRIVAL TIME"));
         processPanel.add(createPanel(gray, black, "BURST TIME"));
         
-        randomButton.setEnabled(true);
+        textButton.setEnabled(true);
         runButton.setEnabled(false);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource()==randomButton){         
+        if (e.getSource()==textButton){   
+            processDetails.clear();
+            processCount = 0;
+            
+            textFile = uploadFile();
+            if (textFile == null) {
+                return;
+            }
+            System.out.println("Successfully uploaded: " + textFile);
+            readFile(textFile);
+            
+            createProcess();
+            
             processPanel.removeAll();
+            repaint();
             processPanel.revalidate();
-            processPanel.repaint();
-            
-            // ensure process list is cleared before adding new ones
-            simulator.clearProcessList();
-            
-            // reset UI headers
             processPanel.add(createPanel(gray, black, "PROCESS ID"));
             processPanel.add(createPanel(gray, black, "ARRIVAL TIME"));
             processPanel.add(createPanel(gray, black, "BURST TIME"));
-            
-            processCount = generateRandom();
-            System.out.println("Number of processes: " + processCount);
-            
+            repaint();
+            System.out.println("simulator.processList: " + processCount);
             for (int i=1; i<=processCount; i++){
-                Process process = createProcess(i);
-                simulator.addProcess(process);
+                repaint();
                 processPanel.add(outputRow(i-1));
+                repaint();
             }
-            
-            processPanel.revalidate();
-            processPanel.repaint();
-            
-            randomButton.setEnabled(false); 
+            repaint();
+            textButton.setEnabled(false);
             runButton.setEnabled(true);
         }
         else if (e.getSource()==clearButton){
+            processDetails.clear();
             simulator.clearProcessList();
             processPanel.removeAll();
+            repaint();
             processPanel.revalidate();
-            processPanel.repaint();
-            
             processPanel.add(createPanel(gray, black, "PROCESS ID"));
             processPanel.add(createPanel(gray, black, "ARRIVAL TIME"));
             processPanel.add(createPanel(gray, black, "BURST TIME"));
-            
+            repaint();
             processCount = 0;
-            randomButton.setEnabled(true);
+            textButton.setEnabled(true);
             runButton.setEnabled(false);
+        }
+        else if (e.getSource()==priorityBox){
+            simulator.setPriorityLevel(priorityBox.getSelectedIndex());
         }
     }
 }

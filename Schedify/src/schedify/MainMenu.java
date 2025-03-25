@@ -16,15 +16,12 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-
 
 public final class MainMenu extends JPanel implements ActionListener{
     public CardLayout cardLayout;
@@ -37,7 +34,7 @@ public final class MainMenu extends JPanel implements ActionListener{
     public int inputMode;
     public int algo=0;
     
-    Help helpPanel = new Help();
+    public Help helpPanel;
     About aboutPanel = new About();
     StartPage startPanel = new StartPage();
     Simulator simulatorPanel = new Simulator();
@@ -49,16 +46,21 @@ public final class MainMenu extends JPanel implements ActionListener{
     
     RandomInputPageRR rrPanel = new RandomInputPageRR(simulatorPanel);
     UserInputPageRR urPanel = new UserInputPageRR(simulatorPanel);
+    TextInputPageRR trPanel = new TextInputPageRR(simulatorPanel);
     
     RandomInputPageDefault rdPanel = new RandomInputPageDefault(simulatorPanel);
     UserInputPageDefault udPanel = new UserInputPageDefault(simulatorPanel); 
+    TextInputPageDefault tdPanel = new TextInputPageDefault(simulatorPanel);
     
     public MainMenu (CardLayout cardLayout, JPanel cardPanel){
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
         
+        if (helpPanel == null) {
+            helpPanel = new Help();
+        }
+        
         showComponents();
-    
     }
     
     public void showComponents(){
@@ -101,7 +103,6 @@ public final class MainMenu extends JPanel implements ActionListener{
         aboutButton.addActionListener(this);
         exitButton.addActionListener(this);
         
-        
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -122,7 +123,6 @@ public final class MainMenu extends JPanel implements ActionListener{
         
         add(outerPanel);
         
-        
         cardPanel.add(this, "MAIN_MENU");
         cardPanel.add(helpPanel, "HELP");
         cardPanel.add(aboutPanel, "ABOUT");
@@ -135,9 +135,11 @@ public final class MainMenu extends JPanel implements ActionListener{
         
         cardPanel.add(rrPanel, "RANDOM_INPUT_RR");
         cardPanel.add(urPanel, "USER_INPUT_RR");
+        cardPanel.add(trPanel, "TEXT_INPUT_RR");
         
         cardPanel.add(rdPanel, "RANDOM_INPUT_DEFAULT");
         cardPanel.add(udPanel, "USER_INPUT_DEFAULT");
+        cardPanel.add(tdPanel, "TEXT_INPUT_DEFAULT");
         
         helpPanel.backButton.addActionListener(this);
         aboutPanel.backButton.addActionListener(this);
@@ -154,9 +156,11 @@ public final class MainMenu extends JPanel implements ActionListener{
         
         rrPanel.backButton.addActionListener(this);
         urPanel.backButton.addActionListener(this);
+        trPanel.backButton.addActionListener(this);
         
         rdPanel.backButton.addActionListener(this);
         udPanel.backButton.addActionListener(this);
+        tdPanel.backButton.addActionListener(this);
         
         upPanel.runButton.addActionListener(this);
         rpPanel.runButton.addActionListener(this);
@@ -164,9 +168,11 @@ public final class MainMenu extends JPanel implements ActionListener{
         
         rrPanel.runButton.addActionListener(this);
         urPanel.runButton.addActionListener(this);
+        trPanel.runButton.addActionListener(this);
         
         rdPanel.runButton.addActionListener(this);
         udPanel.runButton.addActionListener(this);
+        tdPanel.runButton.addActionListener(this);
     }
 
     public JButton createButton(String text) {
@@ -214,7 +220,8 @@ public final class MainMenu extends JPanel implements ActionListener{
         else if (e.getSource() == startButton || e.getSource()==upPanel.backButton 
                 || e.getSource()==rpPanel.backButton || e.getSource()==tpPanel.backButton
                 || e.getSource()==rrPanel.backButton || e.getSource()==rdPanel.backButton
-                || e.getSource()==udPanel.backButton || e.getSource()==urPanel.backButton){
+                || e.getSource()==udPanel.backButton || e.getSource()==urPanel.backButton
+                || e.getSource()==tdPanel.backButton || e.getSource()==trPanel.backButton){
             cardLayout.show(cardPanel, "START");
             simulatorPanel.clearProcessList();
             rdPanel.clearOutputRow();
@@ -223,6 +230,9 @@ public final class MainMenu extends JPanel implements ActionListener{
             udPanel.clearOutputRow();
             urPanel.clearOutputRow();
             upPanel.clearOutputRow();
+            tdPanel.clearOutputRow();
+            trPanel.clearOutputRow();
+            tpPanel.clearOutputRow();
         }
         else if (e.getSource() == helpButton){
             cardLayout.show(cardPanel, "HELP");
@@ -291,7 +301,20 @@ public final class MainMenu extends JPanel implements ActionListener{
             }                        
         }
         else if (e.getSource() == startPanel.continueButton && inputMode==3){
-            cardLayout.show(cardPanel, "TEXT_INPUT_PRIORITY");
+            switch (algo) {
+                case 1: {
+                    cardLayout.show(cardPanel, "TEXT_INPUT_RR");
+                    break;
+                }
+                case 4,5:{
+                    cardLayout.show(cardPanel, "TEXT_INPUT_PRIORITY");
+                    break;
+                }
+                default: {
+                    cardLayout.show(cardPanel, "TEXT_INPUT_DEFAULT");
+                    break;
+                }
+            }              
         }
         else if (e.getSource()==startPanel.optionBox){
             algo = startPanel.optionBox.getSelectedIndex();
@@ -300,7 +323,8 @@ public final class MainMenu extends JPanel implements ActionListener{
         else if (e.getSource()==upPanel.runButton 
                 || e.getSource()==rpPanel.runButton || e.getSource()==tpPanel.runButton
                 || e.getSource()==rrPanel.runButton || e.getSource()==rdPanel.runButton
-                || e.getSource()==udPanel.runButton || e.getSource()==urPanel.runButton){
+                || e.getSource()==udPanel.runButton || e.getSource()==urPanel.runButton
+                || e.getSource()==tdPanel.runButton || e.getSource()==trPanel.runButton){
             schedulingPanel.startSimulation(algo);
             cardLayout.show(cardPanel, "SCHEDULING");
         } else if (e.getSource() == schedulingPanel.backButton) {
@@ -312,6 +336,9 @@ public final class MainMenu extends JPanel implements ActionListener{
             udPanel.clearOutputRow();
             urPanel.clearOutputRow();
             upPanel.clearOutputRow();
+            tdPanel.clearOutputRow();
+            trPanel.clearOutputRow();
+            tpPanel.clearOutputRow();
             schedulingPanel.clearGanttChartPanel();
             schedulingPanel.stopCurrentSimulation();
         }  
@@ -324,6 +351,3 @@ public final class MainMenu extends JPanel implements ActionListener{
         g.drawImage(bg, 0, 0, 1000, 750, null);
     }
 }
-
-
-

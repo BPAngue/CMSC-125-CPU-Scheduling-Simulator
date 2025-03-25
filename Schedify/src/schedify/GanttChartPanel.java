@@ -11,12 +11,14 @@ class GanttChartPanel extends JPanel {
     private ArrayList<Integer> ganttChartTimes;
     private int currentTime;
     private Font font, archivoblack;
+    private HashMap<String, Color> processColors;
 
     public GanttChartPanel(ArrayList<String> labels, ArrayList<Integer> times) {
         this.ganttChartLabels = labels;
         this.ganttChartTimes = times;
         this.currentTime = 0;
         this.archivoblack = importFont("archivoblack");
+        this.processColors = new HashMap<>();
     }
 
     public void setCurrentTime(int time) {
@@ -36,9 +38,17 @@ class GanttChartPanel extends JPanel {
         
         for (int i = 0; i < ganttChartLabels.size(); i++) {
             String process = ganttChartLabels.get(i);
-            g.setColor(process.equals("Idle") ? Color.LIGHT_GRAY : Color.GREEN);
+            
+            // assign a unique color if the process is not "Idle"
+            if (!process.equals("Idle")) {
+                processColors.putIfAbsent(process, getRandomColor());
+                g.setColor(processColors.get(process));
+            } else {
+                g.setColor(Color.LIGHT_GRAY);
+            }
+            
+            // draw process block
             g.fillRect(x, 10, 50, 40);
-
             g.setColor(Color.BLACK);
             g.drawRect(x, 10, 50, 40);
             g.drawString(process, x + 15, 35);
@@ -52,6 +62,18 @@ class GanttChartPanel extends JPanel {
         }
 
         g.drawString("Time: " + currentTime, 10, 80);
+    }
+    
+    private Color getRandomColor() {
+        Random rand = new Random();
+        int r, g, b;
+        do {
+            r = rand.nextInt(156) + 100;
+            g = rand.nextInt(156) + 100;
+            b = rand.nextInt(156) + 100;
+        } while ((r + g + b) / 3 < 170);
+        
+        return new Color(r, g, b);
     }
     
     public Font importFont(String filePath){

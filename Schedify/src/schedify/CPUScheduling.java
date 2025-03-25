@@ -106,7 +106,7 @@ public class CPUScheduling extends Panels {
         // output panel
         outputPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         outputPanel.setBackground(navyBlue);
-        outputPanel.setPreferredSize(new Dimension(930, 440));
+        outputPanel.setPreferredSize(new Dimension(930, 850));
         processScrollPane = new JScrollPane(outputPanel);
         processScrollPane.setPreferredSize(new Dimension(950, 350));
         

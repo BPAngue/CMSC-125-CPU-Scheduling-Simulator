@@ -56,7 +56,7 @@ class SJFNonPreemptive extends Panels {
         processList.sort(Comparator.comparingInt(p -> p.arrivalTime));
         Queue<Process> readyQueue = new LinkedList<>();
 
-        timer = new Timer(1000, new ActionListener() {
+        timer = new Timer(250, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 		// add new processes to the ready queue when they arrive

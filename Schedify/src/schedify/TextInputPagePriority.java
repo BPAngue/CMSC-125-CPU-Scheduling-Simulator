@@ -7,12 +7,20 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.StringTokenizer;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -27,6 +35,9 @@ public class TextInputPagePriority extends Panels implements ActionListener{
     public JScrollPane processScrollPane;
     public int processCount;
     public Color gray, black, transparent, white;
+    public File textFile;
+    
+    public ArrayList<String> processDetails = new ArrayList<>();
     
     private Simulator simulator;
     
@@ -156,10 +167,83 @@ public class TextInputPagePriority extends Panels implements ActionListener{
         
         return panel;
     }
+    
+    public File uploadFile() {
+        JFileChooser fileChooser = new JFileChooser();
+        int returnValue = fileChooser.showOpenDialog(null);
+        
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            System.out.println("File selected: " + selectedFile.getAbsolutePath());
+            return selectedFile;
+        } else {
+            System.out.println("File selection cancelled.");
+            return null;
+        }
+    }
+    
+     public void readFile(File file) {
+         
+        if (file == null) {
+            System.out.println("No file to read.");
+            return;
+        }
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                processDetails.add(line.trim());
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+        }
+        
+    }
+     
+    public void createProcess(){
+        for (String i : processDetails){
+            System.out.println(i);
+            StringTokenizer st = new StringTokenizer(i, ",");
+            if (st.hasMoreTokens()) {
+                processCount++;
+                String processID = st.nextToken().trim();
+                int arrivalTime = Integer.parseInt(st.nextToken().trim());
+                int burstTime = Integer.parseInt(st.nextToken().trim());
+                int priority = Integer.parseInt(st.nextToken().trim());
+                
+                Process process = new Process(processID, arrivalTime, burstTime, priority);
+                simulator.addProcess(process);
+            }
+            
+        }
+    }  
+    
+    public void clearOutputRow() {
+        processPanel.removeAll();
+        processPanel.add(createPanel(gray, black, "PROCESS ID"));
+        processPanel.add(createPanel(gray, black, "ARRIVAL TIME"));
+        processPanel.add(createPanel(gray, black, "BURST TIME"));
+        processPanel.add(createPanel(gray, black, "PRIORITY NUMBER"));
+        
+        textButton.setEnabled(true);
+        runButton.setEnabled(false);
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource()==textButton){
+            processDetails.clear();
+            processCount = 0;
+       
+            textFile = uploadFile();
+            if (textFile == null) {
+                return;
+            }
+            System.out.println("Successfully uploaded: " + textFile);
+            readFile(textFile);
+            
+            createProcess();
+            
             processPanel.removeAll();
             repaint();
             processPanel.revalidate();
@@ -176,9 +260,11 @@ public class TextInputPagePriority extends Panels implements ActionListener{
                 repaint();
             }
             repaint();
-            textButton.setEnabled(false);
+            textButton.setEnabled(false);      
+            runButton.setEnabled(true);
         }
         else if (e.getSource()==clearButton){
+            processDetails.clear();
             simulator.clearProcessList();
             processPanel.removeAll();
             repaint();
@@ -190,11 +276,10 @@ public class TextInputPagePriority extends Panels implements ActionListener{
             repaint();
             processCount = 0;
             textButton.setEnabled(true);
+            runButton.setEnabled(false);
         }
         else if (e.getSource()==priorityBox){
             simulator.setPriorityLevel(priorityBox.getSelectedIndex());
-            // 0 = low #, high priority
-            // 1 = high #, high priority
         }
     }
 }

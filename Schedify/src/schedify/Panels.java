@@ -72,7 +72,6 @@ public class Panels extends JPanel{
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         bg = getImg("/img/background.jpg");
-        g.drawImage(bg, 0, 0, 1000, 750, null);
-        
+        g.drawImage(bg, 0, 0, 1000, 750, null); 
     }
 }

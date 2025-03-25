@@ -268,6 +268,10 @@ public class UserInputPageRR extends Panels implements ActionListener{
     
     public void clearOutputRow() {
         inputPanel2.removeAll();
+        inputPanel2.add(createPanel(gray, black, "PROCESS ID"));
+        inputPanel2.add(createPanel(gray, black, "ARRIVAL TIME"));
+        inputPanel2.add(createPanel(gray, black, "BURST TIME"));
+        
         addButton.setEnabled(true);
         runButton.setEnabled(false);
         quantumField.setText("");

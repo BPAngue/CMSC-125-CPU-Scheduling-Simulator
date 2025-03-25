@@ -183,6 +183,11 @@ public class RandomInputPagePriority extends Panels implements ActionListener{
     
     public void clearOutputRow() {
         processPanel.removeAll();
+        processPanel.add(createPanel(gray, black, "PROCESS ID"));
+        processPanel.add(createPanel(gray, black, "ARRIVAL TIME"));
+        processPanel.add(createPanel(gray, black, "BURST TIME"));
+        processPanel.add(createPanel(gray, black, "PRIORITY NUMBER"));
+        
         randomButton.setEnabled(true);
         runButton.setEnabled(false);
     }
