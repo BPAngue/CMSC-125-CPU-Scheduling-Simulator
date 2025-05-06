@@ -318,6 +318,8 @@ public final class MainMenu extends JPanel implements ActionListener{
         }
         else if (e.getSource()==startPanel.optionBox){
             algo = startPanel.optionBox.getSelectedIndex();
+            String algor = String.valueOf(startPanel.optionBox.getItemAt(algo));
+            simulatorPanel.setAlgorithm(algor);
             System.out.println("Algo: " + algo);
         }
         else if (e.getSource()==upPanel.runButton 

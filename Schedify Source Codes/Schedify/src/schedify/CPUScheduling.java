@@ -28,7 +28,7 @@ public class CPUScheduling extends Panels {
     private JScrollPane processScrollPane, ganttChartScrollPane;
     public JButton backButton, randomButton, clearButton, runButton;
     public Color gray, black, transparent, white, navyBlue;
-    public JLabel cpuLabel, readyQueueLabel, processLabel1, processLabel2;
+    public JLabel cpuLabel, readyQueueLabel, processLabel1, processLabel2, algorithmLabel;
     public Timer timer;
     private Object currentSimulator;
     
@@ -43,22 +43,31 @@ public class CPUScheduling extends Panels {
         transparent = new Color(0,0,0,0);
         navyBlue = new Color(4, 3, 93);
         
+        archivoblack = importFont("archivoblack");
+        
         // header Panel
         header = new JPanel();
         header.setBorder(BorderFactory.createEmptyBorder(10,60,0,50));
         header.setOpaque(false);
         header.setPreferredSize(new Dimension(950, 100));
         
+        algorithmLabel = new JLabel();
+        algorithmLabel.setForeground(white);
+        algorithmLabel.setFont(archivoblack.deriveFont(30f));
+        algorithmLabel.setPreferredSize(new Dimension(300, 100));
+        algorithmLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        
         logo = getImg("/img/logo_small.png");
         logoIcon = new ImageIcon(logo);
         
         logoLabel = new JLabel();
         logoLabel.setIcon(logoIcon);
-        logoLabel.setBorder(BorderFactory.createEmptyBorder(0, 200, 0, 120));
+        logoLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 16));
         
         backButton = createButton("BACK");
         backButton.setBorder(BorderFactory.createEmptyBorder(10,0,10,0));
         header.add(logoLabel);
+        header.add(algorithmLabel);
         header.add(backButton);
         
         // ganttChartPanel
@@ -138,31 +147,37 @@ public class CPUScheduling extends Panels {
         switch(algorithm) {
             case 0: // FCFS
                 System.out.println("FCFS Simulator");
+                algorithmLabel.setText("FCFS");
                 currentSimulator = new FCFS(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel, timer);
                 ((FCFS) currentSimulator).startSimulation();
                 break;
             case 1: // Round Robin
                 System.out.println("Round Robin Simulator");
+                algorithmLabel.setText("Round Robin");
                 currentSimulator = new RoundRobin(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel, timer);
                 ((RoundRobin) currentSimulator).startSimulation(simulator.getQuantumTime());
                 break;
             case 2: // SJF (non-preemptive)
                 System.out.println("SJF Simulator");
+                algorithmLabel.setText("SJF");
                 currentSimulator = new SJFNonPreemptive(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel, timer);
                 ((SJFNonPreemptive) currentSimulator).startSimulation();
                 break;
             case 3: // SRTF 
                 System.out.println("SRTF Simulator");
+                algorithmLabel.setText("SRTF");
                 currentSimulator = new SJFPreemptive(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel, timer);
                 ((SJFPreemptive) currentSimulator).startSimulation();
                 break;
             case 4: // Priority (non-preemptive)
                 System.out.println("Priority non-preemptive Simulator");
+                algorithmLabel.setText("Priority (NP)");
                 currentSimulator = new PriorityNonPreemptive(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel, timer);
                 ((PriorityNonPreemptive) currentSimulator).startSimulation(simulator.getPriorityLevel());
                 break;
             case 5: // Priority (preemptive)
                 System.out.println("Priority preemptive Simulator");
+                algorithmLabel.setText("Priority (P)");
                 currentSimulator = new PriorityPreemptive(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel, timer);
                 ((PriorityPreemptive) currentSimulator).startSimulation(simulator.getPriorityLevel());
                 break;

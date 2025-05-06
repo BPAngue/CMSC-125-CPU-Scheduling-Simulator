@@ -129,7 +129,7 @@ public class UserInputPagePriority extends Panels implements ActionListener{
         inputPanel1.add(errorLabel);
         
         inputPanel2 = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-        inputPanel2.setPreferredSize(new Dimension(800, 840));
+        inputPanel2.setPreferredSize(new Dimension(640, 840));
         inputPanel2.setBackground(new Color(4, 3, 93));
         
         inputPanel2.add(createPanel(gray, black, "PROCESS ID"));
@@ -138,7 +138,7 @@ public class UserInputPagePriority extends Panels implements ActionListener{
         inputPanel2.add(createPanel(gray, black, "PRIORITY NUMBER"));
         
         inputScrollPane = new JScrollPane(inputPanel2);
-        inputScrollPane.setPreferredSize(new Dimension(820, 320));
+        inputScrollPane.setPreferredSize(new Dimension(660, 320));
         inputScrollPane.setBackground(new Color(4, 3, 93, 10));
         inputScrollPane.setFocusable(false);  
         inputScrollPane.setBorder(null);
@@ -180,10 +180,9 @@ public class UserInputPagePriority extends Panels implements ActionListener{
     public JTextField createInputField(){
         JTextField input = new JTextField();
         input.setPreferredSize(new Dimension(160,40));
-        input.setBorder(BorderFactory.createLineBorder(Color.white, 1));
-        input.setOpaque(false);
+        input.setBorder(BorderFactory.createLineBorder(new Color(4, 3, 93), 1));
         input.setFont(archivoblack.deriveFont(14f));
-        input.setForeground(Color.white);
+        input.setForeground(new Color(4, 3, 93));
         input.setHorizontalAlignment(SwingConstants.CENTER);
         input.setEditable(true);
         

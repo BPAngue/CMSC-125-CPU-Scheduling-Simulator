@@ -181,10 +181,9 @@ public class UserInputPageDefault extends Panels implements ActionListener{
     public JTextField createInputField(){
         JTextField input = new JTextField();
         input.setPreferredSize(new Dimension(180,40));
-        input.setBorder(BorderFactory.createLineBorder(Color.white, 1));
-        input.setOpaque(false);
+        input.setBorder(BorderFactory.createLineBorder(new Color(4, 3, 93), 1));
         input.setFont(archivoblack.deriveFont(14f));
-        input.setForeground(Color.white);
+        input.setForeground(new Color(4, 3, 93));
         input.setHorizontalAlignment(SwingConstants.CENTER);
         input.setEditable(true);
         

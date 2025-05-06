@@ -7,6 +7,7 @@ public class Simulator {
     private final ArrayList<Process> processList = new ArrayList<>();
     private int quantumTime;
     private int priorityLevel = 0;
+    private String algorithm;
     
     public void addProcess(Process p) {
         processList.add(p);
@@ -34,5 +35,11 @@ public class Simulator {
     
     public int getPriorityLevel(){
         return priorityLevel;
+    }
+    public void setAlgorithm(String algorithm){
+        this.algorithm = algorithm;
+    }
+    public String getAlgorithm(){
+        return algorithm;
     }
 }
