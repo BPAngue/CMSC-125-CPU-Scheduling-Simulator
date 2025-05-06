@@ -11,24 +11,29 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.StringTokenizer;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
-public class TextInputPageRR extends Panels implements ActionListener{
+public class TextDefault extends Panels implements ActionListener{
     
-    private JPanel header, processPanel, buttonPanel, panel, randomPanel;
+    private JPanel header, processPanel, buttonPanel, panel;
     private JLabel logoLabel;
-    public JButton backButton, randomButton, clearButton, runButton;
+    public JButton backButton, textButton, clearButton, runButton;
+    public JComboBox priorityBox;
     public JScrollPane processScrollPane;
-    public int r, processCount, quantum;
+    public int processCount;
     public Color gray, black, transparent, white;
     public File textFile;
     
@@ -36,7 +41,7 @@ public class TextInputPageRR extends Panels implements ActionListener{
     
     private Simulator simulator;
     
-    public TextInputPageRR(Simulator simulator){
+    public TextDefault(Simulator simulator){
         this.simulator = simulator;
     }
     
@@ -65,30 +70,22 @@ public class TextInputPageRR extends Panels implements ActionListener{
         header.add(logoLabel);
         header.add(backButton);   
         
-        randomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0,0));
-        randomPanel.setPreferredSize(new Dimension(200, 80));
-        randomPanel.setOpaque(false);
-             
-        randomPanel.add(createPanel(gray, black, white, "QUANTUM NUMBER", 200));   
-        randomPanel.add(createPanel(transparent, transparent, white, "", 200));
-        
         buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         buttonPanel.setPreferredSize(new Dimension (800, 100));
         buttonPanel.setOpaque(false);
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(20,0,40,0));
         
         clearButton = createButton("CLEAR");
-        randomButton = createButton("TEXT INPUT");
-        randomButton.setPreferredSize(new Dimension(300,40));
+        textButton = createButton("TXT FILE");
+        textButton.setPreferredSize(new Dimension(300,40));
         runButton = createButton("RUN"); 
-        runButton.setEnabled(false);
         
         clearButton.addActionListener(this);
-        randomButton.addActionListener(this);
+        textButton.addActionListener(this);
         runButton.addActionListener(this); 
         
+        
         buttonPanel.add(clearButton);
-        buttonPanel.add(randomButton);
+        buttonPanel.add(textButton);
         buttonPanel.add(runButton);
         
         processPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,0,0));
@@ -97,20 +94,18 @@ public class TextInputPageRR extends Panels implements ActionListener{
         
         processPanel.add(createPanel(gray, black, "PROCESS ID"));
         processPanel.add(createPanel(gray, black, "ARRIVAL TIME"));
-        processPanel.add(createPanel(gray, black, "BURST TIME"));        
+        processPanel.add(createPanel(gray, black, "BURST TIME"));
         
         processScrollPane = new JScrollPane(processPanel);
-        processScrollPane.setPreferredSize(new Dimension(740, 360));
+        processScrollPane.setPreferredSize(new Dimension(740, 440));
         processScrollPane.setBackground(new Color(4, 3, 93, 10));
         processScrollPane.setFocusable(true);
         processScrollPane.setBorder(null);
         
         add(header);
-        add(randomPanel);
         add(buttonPanel);
         add(processScrollPane);
     }
-   
     
     @Override
     public JButton createButton(String text) {
@@ -123,21 +118,6 @@ public class TextInputPageRR extends Panels implements ActionListener{
         button.setFocusable(false);
         button.setBorderPainted(false);
         return button;
-    }
-    
-    public JPanel createPanel(Color background, Color foreground, Color border, String label, int width){
-        JPanel jpanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10));
-        JLabel jlabel = new JLabel();
-        jpanel.setPreferredSize(new Dimension (width, 40));
-        jpanel.setBorder(BorderFactory.createLineBorder(border, 1));
-        jpanel.setBackground(background);
-        jlabel.setForeground(foreground);
-        jlabel.setText(label);
-        jlabel.setVerticalAlignment(SwingConstants.CENTER);
-        jlabel.setFont(archivoblack.deriveFont(14f));
-        jpanel.add(jlabel, BorderLayout.CENTER);
-        
-        return jpanel;
     }
     
     public JPanel createPanel(Color background, Color foreground, String label){
@@ -155,7 +135,25 @@ public class TextInputPageRR extends Panels implements ActionListener{
         return jpanel;
     }
     
-   public File uploadFile() {
+    public JPanel outputRow(int processCount){
+        ArrayList<Process> localProcessList = simulator.getProcesses();
+        
+        panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0,0));
+        panel.setPreferredSize(new Dimension(720, 40));
+        panel.setOpaque(false);
+            
+            System.out.println("Process ID: " + localProcessList.get(processCount).id);
+            System.out.println("Arrival Time: " + localProcessList.get(processCount).arrivalTime);
+            System.out.println("Burst Time: " + localProcessList.get(processCount).burstTime);
+            
+            panel.add(createPanel(transparent, white, localProcessList.get(processCount).id));
+            panel.add(createPanel(transparent, white, String.valueOf(localProcessList.get(processCount).arrivalTime)));
+            panel.add(createPanel(transparent, white, String.valueOf(localProcessList.get(processCount).burstTime)));
+        
+        return panel;
+    }
+    
+    public File uploadFile() {
         JFileChooser fileChooser = new JFileChooser();
         int returnValue = fileChooser.showOpenDialog(null);
         
@@ -197,56 +195,27 @@ public class TextInputPageRR extends Panels implements ActionListener{
                 int arrivalTime = Integer.parseInt(st.nextToken().trim());
                 int burstTime = Integer.parseInt(st.nextToken().trim());
                 int priority = Integer.parseInt(st.nextToken().trim());
-                quantum = Integer.parseInt(st.nextToken().trim());
                 
                 Process process = new Process(processID, arrivalTime, burstTime, priority);
                 simulator.addProcess(process);
             }
             
         }
-    }    
-    
-    public JPanel outputRow(int processCount){
-        ArrayList<Process> localProcessList = simulator.getProcesses();
-        
-        panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0,0));
-        panel.setPreferredSize(new Dimension(720, 40));
-        panel.setOpaque(false);
-            
-            System.out.println("Process ID: " + localProcessList.get(processCount).id);
-            System.out.println("Arrival Time: " + localProcessList.get(processCount).arrivalTime);
-            System.out.println("Burst Time: " + localProcessList.get(processCount).burstTime);
-            
-            panel.add(createPanel(transparent, white, localProcessList.get(processCount).id));
-            panel.add(createPanel(transparent, white, String.valueOf(localProcessList.get(processCount).arrivalTime)));
-            panel.add(createPanel(transparent, white, String.valueOf(localProcessList.get(processCount).burstTime)));
-        
-        return panel;
-    } 
-    
+    }
+
     public void clearOutputRow() {
         processPanel.removeAll();
         processPanel.add(createPanel(gray, black, "PROCESS ID"));
         processPanel.add(createPanel(gray, black, "ARRIVAL TIME"));
         processPanel.add(createPanel(gray, black, "BURST TIME"));
-
-        randomButton.setEnabled(true);
-        runButton.setEnabled(false);
-        processCount = 0;
-        quantum = 0;
         
-        randomPanel.removeAll();
-        repaint();
-        randomPanel.revalidate();
-        processDetails.clear();
-        randomPanel.add(createPanel(gray, black, white, "QUANTUM NUMBER", 200));
-        randomPanel.add(createPanel(transparent, transparent, white, "", 200));
-        repaint();
+        textButton.setEnabled(true);
+        runButton.setEnabled(false);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource()==randomButton){
+        if (e.getSource()==textButton){   
             processDetails.clear();
             processCount = 0;
             
@@ -259,36 +228,21 @@ public class TextInputPageRR extends Panels implements ActionListener{
             
             createProcess();
             
-            simulator.setQuantumTime(quantum);
-            
             processPanel.removeAll();
             repaint();
             processPanel.revalidate();
             processPanel.add(createPanel(gray, black, "PROCESS ID"));
             processPanel.add(createPanel(gray, black, "ARRIVAL TIME"));
             processPanel.add(createPanel(gray, black, "BURST TIME"));
- 
             repaint();
-            
-            randomPanel.removeAll();
-            repaint();
-            randomPanel.revalidate();   
-            randomPanel.add(createPanel(gray, black, white, "QUANTUM NUMBER", 200));
-            randomPanel.add(createPanel(transparent, white, white, String.valueOf(quantum), 200));
-            randomPanel.repaint();
-           
-            repaint();
-            
-            System.out.println("Process: " + processCount);
-            System.out.println("Quantum Number: " + quantum);
-            
+            System.out.println("simulator.processList: " + processCount);
             for (int i=1; i<=processCount; i++){
                 repaint();
                 processPanel.add(outputRow(i-1));
                 repaint();
             }
             repaint();
-            randomButton.setEnabled(false);
+            textButton.setEnabled(false);
             runButton.setEnabled(true);
         }
         else if (e.getSource()==clearButton){
@@ -300,20 +254,13 @@ public class TextInputPageRR extends Panels implements ActionListener{
             processPanel.add(createPanel(gray, black, "PROCESS ID"));
             processPanel.add(createPanel(gray, black, "ARRIVAL TIME"));
             processPanel.add(createPanel(gray, black, "BURST TIME"));
-
             repaint();
-            
-            randomPanel.removeAll();
-            repaint();
-            randomPanel.revalidate();        
-            randomPanel.add(createPanel(gray, black, white, "QUANTUM NUMBER", 200));
-            randomPanel.add(createPanel(transparent, transparent, white, "", 200));
-            repaint();
-            
             processCount = 0;
-            quantum = 0;
-            randomButton.setEnabled(true);
+            textButton.setEnabled(true);
             runButton.setEnabled(false);
+        }
+        else if (e.getSource()==priorityBox){
+            simulator.setPriorityLevel(priorityBox.getSelectedIndex());
         }
     }
 }

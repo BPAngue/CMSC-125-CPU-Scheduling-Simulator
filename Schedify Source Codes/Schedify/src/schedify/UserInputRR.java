@@ -18,7 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 
-public class UserInputPageRR extends Panels implements ActionListener{
+public class UserInputRR extends Panels implements ActionListener{
     public JPanel panel, header, inputPanel1, inputPanel2, buttonPanel;
     public JLabel logoLabel, errorLabel;
     public JScrollPane inputScrollPane;
@@ -36,7 +36,7 @@ public class UserInputPageRR extends Panels implements ActionListener{
     StartPage start = new StartPage();
     public int algo = start.algo;
     
-    public UserInputPageRR(Simulator simulator){
+    public UserInputRR(Simulator simulator){
         this.simulator = simulator;
     }
     
@@ -219,7 +219,7 @@ public class UserInputPageRR extends Panels implements ActionListener{
             
             if (!(id.isEmpty() || id.isBlank()) && !(arrivalTime.isEmpty() || arrivalTime.isBlank()) && !(burstTime.isEmpty() || burstTime.isBlank()) && (Integer.parseInt(burstTime)>0)
                 && (id.startsWith("P") || id.startsWith("p")) && Character.isDigit(id.charAt(1)) 
-                && id.length()==2 && isNumber(arrivalTime) && isNumber(burstTime)) {
+                && id.length() >= 2 && isNumber(arrivalTime) && isNumber(burstTime)) {
             
                 validInput = true;
             }

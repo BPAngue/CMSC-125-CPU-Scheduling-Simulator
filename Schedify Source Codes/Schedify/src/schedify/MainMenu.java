@@ -40,17 +40,17 @@ public final class MainMenu extends JPanel implements ActionListener{
     Simulator simulatorPanel = new Simulator();
     CPUScheduling schedulingPanel = new CPUScheduling(simulatorPanel);
     
-    UserInputPagePriority upPanel = new UserInputPagePriority(simulatorPanel); 
-    RandomInputPagePriority rpPanel = new RandomInputPagePriority(simulatorPanel); 
-    TextInputPagePriority tpPanel = new TextInputPagePriority(simulatorPanel);
+    UserInputPriority upPanel = new UserInputPriority(simulatorPanel); 
+    RandomPriority rpPanel = new RandomPriority(simulatorPanel); 
+    TextPriority tpPanel = new TextPriority(simulatorPanel);
     
-    RandomInputPageRR rrPanel = new RandomInputPageRR(simulatorPanel);
-    UserInputPageRR urPanel = new UserInputPageRR(simulatorPanel);
-    TextInputPageRR trPanel = new TextInputPageRR(simulatorPanel);
+    RandomRR rrPanel = new RandomRR(simulatorPanel);
+    UserInputRR urPanel = new UserInputRR(simulatorPanel);
+    TextRR trPanel = new TextRR(simulatorPanel);
     
-    RandomInputPageDefault rdPanel = new RandomInputPageDefault(simulatorPanel);
-    UserInputPageDefault udPanel = new UserInputPageDefault(simulatorPanel); 
-    TextInputPageDefault tdPanel = new TextInputPageDefault(simulatorPanel);
+    RandomDefault rdPanel = new RandomDefault(simulatorPanel);
+    UserInputDefault udPanel = new UserInputDefault(simulatorPanel); 
+    TextDefault tdPanel = new TextDefault(simulatorPanel);
     
     public MainMenu (CardLayout cardLayout, JPanel cardPanel){
         this.cardLayout = cardLayout;

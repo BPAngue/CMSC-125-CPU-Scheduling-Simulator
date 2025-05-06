@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -19,31 +18,30 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 
-public class UserInputPagePriority extends Panels implements ActionListener{
+public class UserInputDefault extends Panels implements ActionListener{
     public JPanel panel, header, inputPanel1, inputPanel2, buttonPanel;
     public JLabel logoLabel, errorLabel;
     public JScrollPane inputScrollPane;
     public JButton backButton, clearButton, addButton, runButton;
     public Color gray, black, transparent, white;
     public JTextField inputField, processIDField, burstField, arrivalField, priorityField;
-    public JComboBox priorityBox;
     
     public boolean validInput;
-    public String id, arrivalTime, burstTime, priority;
+    public boolean valid = true;
     public int processCount=0;
     public int clickCount=0;    
     
     private Simulator simulator;
+    
     StartPage start = new StartPage();
     public int algo = start.algo;
     
-    public UserInputPagePriority(Simulator simulator){
+    public UserInputDefault(Simulator simulator){
         this.simulator = simulator;
     }
     
     @Override
     public void showUIComponents(){
-        
         archivoblack = importFont("archivoblack");
         archivonarrow = importFont("archivonarrow");
         setLayout(new FlowLayout());
@@ -71,37 +69,26 @@ public class UserInputPagePriority extends Panels implements ActionListener{
         header.add(backButton);       
         
         inputPanel1 = new JPanel(new FlowLayout(FlowLayout.CENTER, 0,0));
-        inputPanel1.setPreferredSize(new Dimension(800, 230));
+        inputPanel1.setPreferredSize(new Dimension(900, 230));
         inputPanel1.setOpaque(false);
-        inputPanel1.setBorder(BorderFactory.createEmptyBorder(40,0,   10,0));
+        inputPanel1.setBorder(BorderFactory.createEmptyBorder(40,30,   10,30));
         
-        inputPanel1.add(createPanel(gray, black, "PROCESS ID"));
-        inputPanel1.add(createPanel(gray, black, "ARRIVAL TIME"));
-        inputPanel1.add(createPanel(gray, black, "BURST TIME"));
-        inputPanel1.add(createPanel(gray, black, "PRIORITY NUMBER"));
-        inputPanel1.add(createPanel(gray, black, "CHOOSE PRIORITY"));
+        inputPanel1.add(createPanel(gray, black, "PROCESS ID",180));
+        inputPanel1.add(createPanel(gray, black, "ARRIVAL TIME",180));
+        inputPanel1.add(createPanel(gray, black, "BURST TIME",180));
+        inputPanel1.add(createPanel(gray, black, "PRIORITY NUMBER",180));
         
         processIDField = createInputField();
         burstField = createInputField();
         arrivalField = createInputField();
         priorityField = createInputField();
-        
-        String[] priorityLevel = {"Low #, High Priority", "High #, High Priority"};
-        
-        priorityBox = new JComboBox(priorityLevel);
-        priorityBox.setPreferredSize(new Dimension(160, 40));
-        priorityBox.setFocusable(true);
-        priorityBox.setFont(archivoblack.deriveFont(12f));
-        priorityBox.setBackground(Color.WHITE);
-        priorityBox.setForeground(new Color(4, 3, 93));
-        priorityBox.setBorder(null);
-        priorityBox.addActionListener(this);
+        priorityField.setText("-");
+        priorityField.setEnabled(false);
         
         inputPanel1.add(processIDField);
         inputPanel1.add(arrivalField);
         inputPanel1.add(burstField);
         inputPanel1.add(priorityField);
-        inputPanel1.add(priorityBox);
         
         clearButton = createButton("CLEAR");
         addButton = createButton("ADD");
@@ -129,16 +116,15 @@ public class UserInputPagePriority extends Panels implements ActionListener{
         inputPanel1.add(errorLabel);
         
         inputPanel2 = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-        inputPanel2.setPreferredSize(new Dimension(640, 840));
+        inputPanel2.setPreferredSize(new Dimension(720, 840));
         inputPanel2.setBackground(new Color(4, 3, 93));
         
         inputPanel2.add(createPanel(gray, black, "PROCESS ID"));
         inputPanel2.add(createPanel(gray, black, "ARRIVAL TIME"));
         inputPanel2.add(createPanel(gray, black, "BURST TIME"));
-        inputPanel2.add(createPanel(gray, black, "PRIORITY NUMBER"));
         
         inputScrollPane = new JScrollPane(inputPanel2);
-        inputScrollPane.setPreferredSize(new Dimension(660, 320));
+        inputScrollPane.setPreferredSize(new Dimension(740, 320));
         inputScrollPane.setBackground(new Color(4, 3, 93, 10));
         inputScrollPane.setFocusable(false);  
         inputScrollPane.setBorder(null);
@@ -165,8 +151,23 @@ public class UserInputPagePriority extends Panels implements ActionListener{
     public JPanel createPanel(Color background, Color foreground, String label){
         JPanel jpanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10));
         JLabel jlabel = new JLabel();
-        jpanel.setPreferredSize(new Dimension (160, 40));
+        jpanel.setPreferredSize(new Dimension (240, 40));
         jpanel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
+        jpanel.setBackground(background);
+        jlabel.setForeground(foreground);
+        jlabel.setText(label);
+        jlabel.setVerticalAlignment(SwingConstants.CENTER);
+        jlabel.setFont(archivoblack.deriveFont(14f));
+        jpanel.add(jlabel, BorderLayout.CENTER);
+        
+        return jpanel;
+    }
+    
+    public JPanel createPanel(Color background, Color foreground, String label, int width){
+        JPanel jpanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10));
+        JLabel jlabel = new JLabel();
+        jpanel.setPreferredSize(new Dimension (width, 40));
+        jpanel.setBorder(BorderFactory.createLineBorder(white, 1));
         jpanel.setBackground(background);
         jlabel.setForeground(foreground);
         jlabel.setText(label);
@@ -179,7 +180,7 @@ public class UserInputPagePriority extends Panels implements ActionListener{
     
     public JTextField createInputField(){
         JTextField input = new JTextField();
-        input.setPreferredSize(new Dimension(160,40));
+        input.setPreferredSize(new Dimension(180,40));
         input.setBorder(BorderFactory.createLineBorder(new Color(4, 3, 93), 1));
         input.setFont(archivoblack.deriveFont(14f));
         input.setForeground(new Color(4, 3, 93));
@@ -190,15 +191,17 @@ public class UserInputPagePriority extends Panels implements ActionListener{
     }
     
     public Process createProcess(){
-        id = processIDField.getText().toUpperCase();
+        String id = processIDField.getText().toUpperCase();
         int AT = Integer.parseInt(arrivalField.getText());
         int BT = Integer.parseInt(burstField.getText());
-        int P = Integer.parseInt(priorityField.getText());
+        int P = 1;
         
         Process process = new Process(id, AT, BT, P);
         
         return process;
     }
+    
+    
     
     public boolean isNumber(String s) {
         for (int i = 0; i < s.length(); i++) {
@@ -215,11 +218,10 @@ public class UserInputPagePriority extends Panels implements ActionListener{
             String id = processIDField.getText();
             String arrivalTime = arrivalField.getText();
             String burstTime = burstField.getText();
-            String priority = priorityField.getText();
             
             if (!(id.isEmpty() || id.isBlank()) && !(arrivalTime.isEmpty() || arrivalTime.isBlank()) && !(burstTime.isEmpty() || burstTime.isBlank()) && (Integer.parseInt(burstTime)>0)
-                && !(priority.isEmpty() || priority.isBlank()) && (id.startsWith("P") || id.startsWith("p")) && Character.isDigit(id.charAt(1)) 
-                && id.length()==2 && isNumber(arrivalTime) && isNumber(burstTime) && isNumber(priority)) {
+                && (id.startsWith("P") || id.startsWith("p")) && Character.isDigit(id.charAt(1)) 
+                && id.length()>=2 && isNumber(arrivalTime) && isNumber(burstTime)) {
             
                 validInput = true;
             }
@@ -250,18 +252,17 @@ public class UserInputPagePriority extends Panels implements ActionListener{
         ArrayList<Process> localProcessList = simulator.getProcesses();
         
         panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0,0));
-        panel.setPreferredSize(new Dimension(800, 40));
+        panel.setPreferredSize(new Dimension(720, 40));
         panel.setOpaque(false);
             
             System.out.println("Process ID: " + localProcessList.get(processCount).id);
             System.out.println("Arrival Time: " + localProcessList.get(processCount).arrivalTime);
             System.out.println("Burst Time: " + localProcessList.get(processCount).burstTime);
-            System.out.println("Priority: " + localProcessList.get(processCount).priority + "\n");
             
             panel.add(createPanel(transparent, white, localProcessList.get(processCount).id));
             panel.add(createPanel(transparent, white, String.valueOf(localProcessList.get(processCount).arrivalTime)));
             panel.add(createPanel(transparent, white, String.valueOf(localProcessList.get(processCount).burstTime)));
-            panel.add(createPanel(transparent, white, String.valueOf(localProcessList.get(processCount).priority)));
+            
         
         return panel;
     }
@@ -271,7 +272,6 @@ public class UserInputPagePriority extends Panels implements ActionListener{
         inputPanel2.add(createPanel(gray, black, "PROCESS ID"));
         inputPanel2.add(createPanel(gray, black, "ARRIVAL TIME"));
         inputPanel2.add(createPanel(gray, black, "BURST TIME"));
-        inputPanel2.add(createPanel(gray, black, "PRIORITY NUMBER"));
         
         addButton.setEnabled(true);
         runButton.setEnabled(false);
@@ -284,10 +284,9 @@ public class UserInputPagePriority extends Panels implements ActionListener{
             inputPanel2.removeAll();
             repaint();
             inputPanel2.revalidate();
-            inputPanel2.add(createPanel(gray, black, "PROCESS ID"));
-            inputPanel2.add(createPanel(gray, black, "ARRIVAL TIME"));
-            inputPanel2.add(createPanel(gray, black, "BURST TIME"));
-            inputPanel2.add(createPanel(gray, black, "PRIORITY NUMBER"));
+            inputPanel2.add(createPanel(gray, black, "PROCESS ID", 240));
+            inputPanel2.add(createPanel(gray, black, "ARRIVAL TIME",240));
+            inputPanel2.add(createPanel(gray, black, "BURST TIME",240));
             repaint();
             errorLabel.setText("");
             
@@ -297,7 +296,7 @@ public class UserInputPagePriority extends Panels implements ActionListener{
             processIDField.setText("");
             arrivalField.setText("");
             burstField.setText("");
-            priorityField.setText("");
+            priorityField.setText("-");
             
             
             if (processCount >=3 && processCount <= 20){
@@ -329,20 +328,17 @@ public class UserInputPagePriority extends Panels implements ActionListener{
             inputPanel2.removeAll();
             repaint();
             inputPanel2.revalidate();
-            inputPanel2.add(createPanel(gray, black, "PROCESS ID"));
-            inputPanel2.add(createPanel(gray, black, "ARRIVAL TIME"));
-            inputPanel2.add(createPanel(gray, black, "BURST TIME"));
-            inputPanel2.add(createPanel(gray, black, "PRIORITY NUMBER"));
+            inputPanel2.add(createPanel(gray, black, "PROCESS ID", 240));
+            inputPanel2.add(createPanel(gray, black, "ARRIVAL TIME", 240));
+            inputPanel2.add(createPanel(gray, black, "BURST TIME", 240));
             repaint();
             processCount = 0;
             errorLabel.setText("");
             runButton.setEnabled(false);
+            priorityField.setText("-");
         }
-        else if (e.getSource()==priorityBox){
-            simulator.setPriorityLevel(priorityBox.getSelectedIndex());
-            // 0 = low #, high priority
-            // 1 = high #, high priority
-            System.out.println("PrioLevel: " + simulator.getPriorityLevel());
+        else if (e.getSource()==start.optionBox){
+            
         }
     }
     

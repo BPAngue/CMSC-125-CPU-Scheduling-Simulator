@@ -160,26 +160,26 @@ public class CPUScheduling extends Panels {
             case 2: // SJF (non-preemptive)
                 System.out.println("SJF Simulator");
                 algorithmLabel.setText("SJF");
-                currentSimulator = new SJFNonPreemptive(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel, timer);
-                ((SJFNonPreemptive) currentSimulator).startSimulation();
+                currentSimulator = new SJFNP(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel, timer);
+                ((SJFNP) currentSimulator).startSimulation();
                 break;
             case 3: // SRTF 
                 System.out.println("SRTF Simulator");
                 algorithmLabel.setText("SRTF");
-                currentSimulator = new SJFPreemptive(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel, timer);
-                ((SJFPreemptive) currentSimulator).startSimulation();
+                currentSimulator = new SJFP(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel, timer);
+                ((SJFP) currentSimulator).startSimulation();
                 break;
             case 4: // Priority (non-preemptive)
                 System.out.println("Priority non-preemptive Simulator");
                 algorithmLabel.setText("Priority (NP)");
-                currentSimulator = new PriorityNonPreemptive(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel, timer);
-                ((PriorityNonPreemptive) currentSimulator).startSimulation(simulator.getPriorityLevel());
+                currentSimulator = new PriorityNP(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel, timer);
+                ((PriorityNP) currentSimulator).startSimulation(simulator.getPriorityLevel());
                 break;
             case 5: // Priority (preemptive)
                 System.out.println("Priority preemptive Simulator");
                 algorithmLabel.setText("Priority (P)");
-                currentSimulator = new PriorityPreemptive(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel, timer);
-                ((PriorityPreemptive) currentSimulator).startSimulation(simulator.getPriorityLevel());
+                currentSimulator = new PriorityP(processList, ganttChartPanel, ganttChartLabels, ganttChartTimes, outputPanel, cpuPanel, readyQueuePanel, timer);
+                ((PriorityP) currentSimulator).startSimulation(simulator.getPriorityLevel());
                 break;
         }
     }  
@@ -227,16 +227,16 @@ public class CPUScheduling extends Panels {
         } else if(currentSimulator instanceof RoundRobin roundRobin) {
             roundRobin.stopSimulation();
             roundRobin.clearOutputPanel();
-        } else if(currentSimulator instanceof SJFNonPreemptive sJFNonPreemptive) {
+        } else if(currentSimulator instanceof SJFNP sJFNonPreemptive) {
             sJFNonPreemptive.stopSimulation();
             sJFNonPreemptive.clearOutputPanel();
-        } else if(currentSimulator instanceof SJFPreemptive sJFPreemptive) {
+        } else if(currentSimulator instanceof SJFP sJFPreemptive) {
             sJFPreemptive.stopSimulation();
             sJFPreemptive.clearOutputPanel();
-        } else if(currentSimulator instanceof PriorityNonPreemptive priorityNonPreemptive) {
+        } else if(currentSimulator instanceof PriorityNP priorityNonPreemptive) {
             priorityNonPreemptive.stopSimulation();
             priorityNonPreemptive.clearOutputPanel();
-        } else if(currentSimulator instanceof PriorityPreemptive priorityPreemptive) {
+        } else if(currentSimulator instanceof PriorityP priorityPreemptive) {
             priorityPreemptive.stopSimulation();
             priorityPreemptive.clearOutputPanel();
         }

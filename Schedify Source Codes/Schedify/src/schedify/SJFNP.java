@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
-class SJFPreemptive extends Panels {
+class SJFNP extends Panels {
     private ArrayList<Process> processList;
     private GanttChartPanel ganttChartPanel;
     private ArrayList<String> ganttChartLabels;
@@ -31,7 +31,7 @@ class SJFPreemptive extends Panels {
     public Color transparent, white, gray, black;
     public Timer timer;
     
-    public SJFPreemptive(ArrayList<Process> processList, GanttChartPanel ganttChartPanel, ArrayList<String> ganttChartLabels, ArrayList<Integer> ganttChartTimes, JPanel outputPanel, JPanel cpuPanel, JPanel readyQueuePanel, Timer timer) {
+    public SJFNP(ArrayList<Process> processList, GanttChartPanel ganttChartPanel, ArrayList<String> ganttChartLabels, ArrayList<Integer> ganttChartTimes, JPanel outputPanel, JPanel cpuPanel, JPanel readyQueuePanel, Timer timer) {
         this.processList = processList;
         this.ganttChartPanel = ganttChartPanel;
         this.ganttChartLabels = ganttChartLabels;
@@ -68,19 +68,11 @@ class SJFPreemptive extends Panels {
                     updateReadyQueuePanel(readyQueue);
                 }
                 
-                // check if the next process has less remaining time
-                if (!readyQueue.isEmpty()) {
-                    Process lowestRmngTimeProcess = Collections.min(readyQueue, Comparator.comparingInt(p -> p.remainingTime));
-                    
-                    if (currentProcess == null || lowestRmngTimeProcess.remainingTime < currentProcess.remainingTime) {
-                        if (currentProcess != null && currentProcess.remainingTime > 0) {
-                            // pre-empt the current process and put it back in the queue
-                            readyQueue.offer(currentProcess);
-                            updateReadyQueuePanel(readyQueue);
-                        }
-                        
-                        // get new process
-                        currentProcess = lowestRmngTimeProcess;
+                // check if there are currently running processes
+                if (currentProcess == null || currentProcess.remainingTime == 0) {
+                    // get a new process only if needed
+                    if (!readyQueue.isEmpty()) {
+                        currentProcess = Collections.min(readyQueue, Comparator.comparingInt(p -> p.burstTime));
                         readyQueue.remove(currentProcess);
                         updateReadyQueuePanel(readyQueue);
                         

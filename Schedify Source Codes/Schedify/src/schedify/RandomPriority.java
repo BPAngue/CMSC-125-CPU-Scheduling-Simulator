@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
-public class RandomInputPagePriority extends Panels implements ActionListener{
+public class RandomPriority extends Panels implements ActionListener{
     
     private JPanel header, processPanel, buttonPanel, panel;
     private JLabel logoLabel;
@@ -30,7 +30,7 @@ public class RandomInputPagePriority extends Panels implements ActionListener{
     
     private Simulator simulator;
     
-    public RandomInputPagePriority(Simulator simulator){
+    public RandomPriority(Simulator simulator){
         this.simulator = simulator;
     }
     

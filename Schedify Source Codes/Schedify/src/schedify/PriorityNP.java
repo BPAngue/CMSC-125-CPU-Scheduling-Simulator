@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
-class PriorityNonPreemptive extends Panels {
+class PriorityNP extends Panels {
     private ArrayList<Process> processList;
     private GanttChartPanel ganttChartPanel;
     private ArrayList<String> ganttChartLabels;
@@ -31,7 +31,7 @@ class PriorityNonPreemptive extends Panels {
     public Color transparent, white, gray, black;
     public Timer timer;
     
-    public PriorityNonPreemptive(ArrayList<Process> processList, GanttChartPanel ganttChartPanel, ArrayList<String> ganttChartLabels, ArrayList<Integer> ganttChartTimes, JPanel outputPanel, JPanel cpuPanel, JPanel readyQueuePanel, Timer timer) {
+    public PriorityNP(ArrayList<Process> processList, GanttChartPanel ganttChartPanel, ArrayList<String> ganttChartLabels, ArrayList<Integer> ganttChartTimes, JPanel outputPanel, JPanel cpuPanel, JPanel readyQueuePanel, Timer timer) {
         this.processList = processList;
         this.ganttChartPanel = ganttChartPanel;
         this.ganttChartLabels = ganttChartLabels;
